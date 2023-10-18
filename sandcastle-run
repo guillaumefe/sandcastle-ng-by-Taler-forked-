@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# Run the Taler container with all the right mounts and preset parameters
+
+set -eu
+
+SANDCASTLE_PORT_MERCHANT=16000
+SANDCASTLE_PORT_EXCHANGE=16001
+SANDCASTLE_PORT_BLOG=16002
+SANDCASTLE_PORT_DONATIONS=16003
+SANDCASTLE_PORT_SURVEY=16004
+SANDCASTLE_PORT_LANDING=16005
+SANDCASTLE_PORT_LIBEUFIN_BANK=16007
+SANDCASTLE_PORT_BANK_SPA=16006
+
+# Container-internal ports, should by synced with scripts/setup-sandcastle.sh
+PORT_INTERNAL_EXCHANGE=8201
+PORT_INTERNAL_MERCHANT=8301
+PORT_INTERNAL_LIBEUFIN_BANK=8080
+PORT_INTERNAL_LANDING=8501
+PORT_INTERNAL_BLOG=8502
+PORT_INTERNAL_DONATIONS=8503
+PORT_INTERNAL_SURVEY=8504
+PORT_INTERNAL_BANK_SPA=8505
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd $SCRIPT_DIR
+
+existing_id=$(podman ps -q -a -f=name=taler-sandcastle)
+
+if [[ ! -z "$existing_id" ]]; then
+  echo "removing existing taler-sandcastle container $existing_id"
+  podman rm "$existing_id"
+fi
+
+# We need to be careful with SELinux when using volume mounts, relabel!
+
+SETUP_NAME=${SANDCASTLE_SETUP_NAME:-demo}
+
+exec podman run \
+  -p=$SANDCASTLE_PORT_MERCHANT:$PORT_INTERNAL_MERCHANT \
+  -p=$SANDCASTLE_PORT_EXCHANGE:$PORT_INTERNAL_EXCHANGE \
+  -p=$SANDCASTLE_PORT_LIBEUFIN_BANK:$PORT_INTERNAL_LIBEUFIN_BANK \
+  -p=$SANDCASTLE_PORT_LANDING:$PORT_INTERNAL_LANDING \
+  -p=$SANDCASTLE_PORT_BLOG:$PORT_INTERNAL_BLOG \
+  -p=$SANDCASTLE_PORT_DONATIONS:$PORT_INTERNAL_DONATIONS \
+  -p=$SANDCASTLE_PORT_SURVEY:$PORT_INTERNAL_SURVEY \
+  -p=$SANDCASTLE_PORT_BANK_SPA:$PORT_INTERNAL_BANK_SPA \
+  --name taler-sandcastle \
+  --systemd=always \
+  -v talerdata:/talerdata:Z \
+  -v $PWD/scripts:/scripts:Z \
+  -v $PWD/scripts/$SETUP_NAME:/provision:Z \
+  --entrypoint /sbin/init \
+  "$@" \
+  taler-base-all

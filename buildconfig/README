@@ -1,0 +1,5 @@
+These files determine the git tag from which the respective components are
+built in the base Docker image.
+
+They are in separate files to make modification checking with
+staged Docker builds work nicely.
