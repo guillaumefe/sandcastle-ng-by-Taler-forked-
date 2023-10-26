@@ -82,7 +82,7 @@ WORKDIR /
 RUN mkdir -p /packages/gnunet
 RUN mv /build/*.deb /packages/gnunet
 RUN rm -rf /build
-RUN dpkg -i /packages/gnunet/*.deb
+RUN apt-get install /packages/gnunet/*.deb
 WORKDIR /
 
 # Exchange
@@ -100,7 +100,7 @@ WORKDIR /
 RUN mkdir -p /packages/exchange
 RUN mv /build/*.deb /packages/exchange
 RUN rm -rf /build
-RUN dpkg -i /packages/exchange/*.deb
+RUN apt-get install /packages/exchange/*.deb
 WORKDIR /
 
 # Merchant
@@ -118,7 +118,7 @@ WORKDIR /
 RUN mkdir -p /packages/merchant
 RUN mv /build/*.deb /packages/merchant
 RUN rm -rf /build
-RUN dpkg -i /packages/merchant/*.deb
+RUN apt-get install /packages/merchant/*.deb
 WORKDIR /
 
 # Libeufin
@@ -137,7 +137,7 @@ WORKDIR /
 RUN mkdir -p /packages/libeufin
 RUN mv /build/*.deb /packages/libeufin
 RUN rm -rf /build
-RUN dpkg -i /packages/libeufin/*.deb
+RUN apt-get install /packages/libeufin/*.deb
 
 # Merchant demos
 FROM base-system as merchant-demos
@@ -154,7 +154,7 @@ WORKDIR /
 RUN mkdir -p /packages/merchant-demos
 RUN mv /build/*.deb /packages/merchant-demos
 RUN rm -rf /build
-RUN dpkg -i /packages/merchant-demos/*.deb
+RUN apt-get install /packages/merchant-demos/*.deb
 
 # wallet-core tools (taler-wallet-cli and taler-harness)
 FROM base-system as wallet
@@ -182,7 +182,7 @@ WORKDIR /
 RUN mkdir -p /packages/wallet
 RUN mv /build/wallet-core/packages/*.deb /packages/wallet
 RUN rm -rf /build
-RUN dpkg -i /packages/wallet/*.deb
+RUN apt-get install /packages/wallet/*.deb
 
 # Sync
 FROM merchant as sync
@@ -198,7 +198,7 @@ WORKDIR /
 RUN mkdir -p /packages/sync
 RUN mv /build/*.deb /packages/sync
 RUN rm -rf /build
-RUN dpkg -i /packages/sync/*.deb
+RUN apt-get install /packages/sync/*.deb
 WORKDIR /
 
 
@@ -230,7 +230,7 @@ COPY --from=merchant /packages/merchant/* /packages/
 COPY --from=wallet /packages/wallet/* /packages/
 COPY --from=libeufin /packages/libeufin/* /packages/
 COPY --from=merchant-demos /packages/merchant-demos/* /packages/
-RUN dpkg -i /packages/*.deb
+RUN apt-get install /packages/*.deb
 COPY systemd/setup-sandcastle.service /etc/systemd/system/
 RUN systemctl enable setup-sandcastle.service
 RUN systemctl disable postgresql
