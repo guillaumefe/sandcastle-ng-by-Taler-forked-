@@ -37,7 +37,8 @@ fi
 
 SETUP_NAME=${SANDCASTLE_SETUP_NAME:-demo}
 
-exec podman run \
+podman run \
+  -d \
   -p=$SANDCASTLE_PORT_MERCHANT:$PORT_INTERNAL_MERCHANT \
   -p=$SANDCASTLE_PORT_EXCHANGE:$PORT_INTERNAL_EXCHANGE \
   -p=$SANDCASTLE_PORT_LIBEUFIN_BANK:$PORT_INTERNAL_LIBEUFIN_BANK \
@@ -54,3 +55,5 @@ exec podman run \
   --entrypoint /sbin/init \
   "$@" \
   taler-base-all
+
+exec podman exec -it taler-sandcastle journalctl -f
