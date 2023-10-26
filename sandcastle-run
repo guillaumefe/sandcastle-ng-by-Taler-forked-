@@ -2,7 +2,7 @@
 
 # Run the Taler container with all the right mounts and preset parameters
 
-set -eu
+set -exou
 
 SANDCASTLE_PORT_MERCHANT=16000
 SANDCASTLE_PORT_EXCHANGE=16001
