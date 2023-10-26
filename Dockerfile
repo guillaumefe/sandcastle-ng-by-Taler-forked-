@@ -1,4 +1,4 @@
-FROM debian:bookworm AS base-system
+FROM docker.io/library/debian:bookworm AS base-system
 
 # FIXMEs:
 # - debian packages should be built with a nightly tag
