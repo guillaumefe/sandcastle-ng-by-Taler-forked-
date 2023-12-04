@@ -233,4 +233,6 @@ COPY --from=merchant-demos /packages/merchant-demos/* /packages/
 RUN apt-get install --no-install-recommends -y /packages/*.deb
 COPY systemd/setup-sandcastle.service /etc/systemd/system/
 RUN systemctl enable setup-sandcastle.service
-RUN systemctl disable postgresql
+# Disable potentially problem-causing services
+RUN systemctl disable postgresql && \
+    systemctl disable apache2 || true
