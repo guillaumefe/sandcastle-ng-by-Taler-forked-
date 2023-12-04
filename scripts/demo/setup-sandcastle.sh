@@ -169,12 +169,13 @@ systemctl start postgresql.service
 
 # Set up bank
 
+
+# FIXME: user libeufin-dbconf instead of manual setup
+
 BANK_DB=libeufinbank
 # Use "|| true" to continue if these already exist.
 sudo -i -u postgres createuser -d libeufin-bank || true
 sudo -i -u postgres createdb -O libeufin-bank $BANK_DB || true
-
-sudo -i -u libeufin-bank libeufin-bank dbinit
 
 cat <<EOF >/etc/libeufin/libeufin-bank.conf
 [libeufin-bankdb-postgres]
@@ -213,6 +214,8 @@ cat <<EOF >/etc/libeufin/settings.json
   ]
 }
 EOF
+
+sudo -i -u libeufin-bank libeufin-bank dbinit
 
 systemctl enable --now libeufin-bank.service
 
