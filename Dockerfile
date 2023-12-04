@@ -182,7 +182,7 @@ WORKDIR /
 RUN mkdir -p /packages/wallet
 RUN mv /build/wallet-core/packages/*.deb /packages/wallet
 RUN rm -rf /build
-RUN apt-get install /packages/wallet/*.deb
+RUN apt-get install -y /packages/wallet/*.deb
 
 # Sync
 FROM merchant as sync
@@ -198,7 +198,7 @@ WORKDIR /
 RUN mkdir -p /packages/sync
 RUN mv /build/*.deb /packages/sync
 RUN rm -rf /build
-RUN apt-get install /packages/sync/*.deb
+RUN apt-get install -y /packages/sync/*.deb
 WORKDIR /
 
 
@@ -230,7 +230,7 @@ COPY --from=merchant /packages/merchant/* /packages/
 COPY --from=wallet /packages/wallet/* /packages/
 COPY --from=libeufin /packages/libeufin/* /packages/
 COPY --from=merchant-demos /packages/merchant-demos/* /packages/
-RUN apt-get install /packages/*.deb
+RUN apt-get install -y /packages/*.deb
 COPY systemd/setup-sandcastle.service /etc/systemd/system/
 RUN systemctl enable setup-sandcastle.service
 RUN systemctl disable postgresql
