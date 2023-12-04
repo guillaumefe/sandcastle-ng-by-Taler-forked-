@@ -177,6 +177,10 @@ sudo -i -u postgres createdb -O libeufin-bank $BANK_DB || true
 sudo -i -u libeufin-bank libeufin-bank dbinit
 
 cat <<EOF >/etc/libeufin/libeufin-bank.conf
+[libeufin-bankdb-postgres]
+# DB connection string
+CONFIG = postgresql:///$BANK_DB
+
 [libeufin-bank]
 CURRENCY = $CURRENCY
 DEFAULT_CUSTOMER_DEBT_LIMIT = $CURRENCY:5000
