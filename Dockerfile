@@ -82,7 +82,7 @@ WORKDIR /
 RUN mkdir -p /packages/gnunet
 RUN mv /build/*.deb /packages/gnunet
 RUN rm -rf /build
-RUN apt-get install /packages/gnunet/*.deb
+RUN apt-get install -y /packages/gnunet/*.deb
 WORKDIR /
 
 # Exchange
@@ -100,7 +100,7 @@ WORKDIR /
 RUN mkdir -p /packages/exchange
 RUN mv /build/*.deb /packages/exchange
 RUN rm -rf /build
-RUN apt-get install /packages/exchange/*.deb
+RUN apt-get install -y /packages/exchange/*.deb
 WORKDIR /
 
 # Merchant
@@ -118,7 +118,7 @@ WORKDIR /
 RUN mkdir -p /packages/merchant
 RUN mv /build/*.deb /packages/merchant
 RUN rm -rf /build
-RUN apt-get install /packages/merchant/*.deb
+RUN apt-get install -y /packages/merchant/*.deb
 WORKDIR /
 
 # Libeufin
@@ -137,7 +137,7 @@ WORKDIR /
 RUN mkdir -p /packages/libeufin
 RUN mv /build/*.deb /packages/libeufin
 RUN rm -rf /build
-RUN apt-get install /packages/libeufin/*.deb
+RUN apt-get install -y /packages/libeufin/*.deb
 
 # Merchant demos
 FROM base-system as merchant-demos
@@ -154,7 +154,7 @@ WORKDIR /
 RUN mkdir -p /packages/merchant-demos
 RUN mv /build/*.deb /packages/merchant-demos
 RUN rm -rf /build
-RUN apt-get install /packages/merchant-demos/*.deb
+RUN apt-get install -y /packages/merchant-demos/*.deb
 
 # wallet-core tools (taler-wallet-cli and taler-harness)
 FROM base-system as wallet
