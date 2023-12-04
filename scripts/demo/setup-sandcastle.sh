@@ -71,7 +71,7 @@ systemctl stop libeufin-bank.service
 # and then symlinked.
 # These locations are:
 # /etc/taler
-# /etc/libeufin-bank
+# /etc/libeufin
 # /var/lib/taler
 # postgres DB directory
 
@@ -94,7 +94,7 @@ function lift_dir() {
 
 lift_dir /var/lib/taler var-lib-taler
 lift_dir /etc/taler etc-taler
-lift_dir /etc/libeufin-bank etc-libeufin-bank
+lift_dir /etc/libeufin etc-libeufin
 lift_dir /var/lib/postgresql var-lib-postgresql
 lift_dir /usr/share/taler/terms usr-share-taler-terms
 
@@ -142,8 +142,8 @@ https://$MERCHANT_DOMAIN {
 }
 
 :$PORT_INTERNAL_BANK_SPA {
-  root * /usr/share/libeufin-bank/spa
-  root /demobank-ui-settings.js /etc/libeufin-bank/
+  root * /usr/share/libeufin/spa
+  root /settings.json /etc/libeufin/
   file_server
 }
 EOF
@@ -176,7 +176,7 @@ sudo -i -u postgres createdb -O libeufin-bank $BANK_DB || true
 
 sudo -i -u libeufin-bank libeufin-bank dbinit
 
-cat <<EOF >/etc/libeufin-bank/libeufin-bank.conf
+cat <<EOF >/etc/libeufin/libeufin-bank.conf
 [libeufin-bank]
 CURRENCY = $CURRENCY
 DEFAULT_CUSTOMER_DEBT_LIMIT = $CURRENCY:5000
@@ -198,25 +198,16 @@ is_currency_name_leading = NO
 alt_unit_names = {"0":"$CURRENCY"}
 EOF
 
-cat <<EOF >/etc/libeufin-bank/demobank-ui-settings.js
-globalThis.talerDemobankSettings = {
-  // Only Admin adds users
-  allowRegistrations: false,
-  bankName: "Taler Bank",
-  allowRegistrations: true,
-  simplePasswordForRandomAccounts: true,
-  allowRandomAccountCreation: true,
-  // Show explainer text and navbar to other demo sites
-  showDemoNav: false,
-  demoSites: [
+cat <<EOF >/etc/libeufin/settings.json
+{
+  "topNavSites": [
     ["Landing", "https://$LANDING_DOMAIN/"],
     ["Bank", "https://$BANK_DOMAIN/"],
     ["Essay Shop", "https://$BLOG_DOMAIN/"],
     ["Donations", "https://$DONATIONS_DOMAIN/"],
-    ["Survey", "https://$SURVEY_DOMAIN/"],
-  ],
-  backendBaseURL: "https://$BANK_DOMAIN/",
-};
+    ["Survey", "https://$SURVEY_DOMAIN/"]
+  ]
+}
 EOF
 
 systemctl enable --now libeufin-bank.service
