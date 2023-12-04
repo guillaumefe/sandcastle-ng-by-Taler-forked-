@@ -191,6 +191,9 @@ REGISTRATION_BONUS_ENABLED = yes
 SPA_CAPTCHA_URL = https://$BANK_DOMAIN/webui/#/operation/{woid}
 SUGGESTED_WITHDRAWAL_EXCHANGE = https://$EXCHANGE_DOMAIN/
 
+SERVE = tcp
+PORT = 8080
+
 [currency-$CURRENCY]
 ENABLED = YES
 name = "$CURRENCY (Taler Demonstrator)"
@@ -403,6 +406,10 @@ chmod 440 /etc/taler/secrets/merchant-db.secret.conf
 chown taler-merchant-httpd:root /etc/taler/secrets/merchant-db.secret.conf
 
 sudo -u taler-merchant-httpd taler-merchant-dbinit -c /etc/taler/taler.conf
+
+# The config shipped with the package can conflict with the
+# trusted sandcastle exchange if the currency is KUDOS.
+rm /usr/share/taler/config.d/kudos.conf
 
 cat <<EOF >/etc/taler/conf.d/merchant-exchanges.conf
 [merchant-exchange-sandcastle]
