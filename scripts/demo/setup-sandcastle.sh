@@ -206,13 +206,13 @@ EOF
 
 cat <<EOF >/etc/libeufin/settings.json
 {
-  "topNavSites": [
-    ["Landing", "https://$LANDING_DOMAIN/"],
-    ["Bank", "https://$BANK_DOMAIN/"],
-    ["Essay Shop", "https://$BLOG_DOMAIN/"],
-    ["Donations", "https://$DONATIONS_DOMAIN/"],
-    ["Survey", "https://$SURVEY_DOMAIN/"]
-  ]
+  "topNavSites": {
+    "Landing": "https://$LANDING_DOMAIN/",
+    "Bank": "https://$BANK_DOMAIN",
+    "Essay Shop": "https://$BLOG_DOMAIN",
+    "Donations": "https://$DONATIONS_DOMAIN",
+    "Survey": "https://$SURVEY_DOMAIN"
+  }
 }
 EOF
 
