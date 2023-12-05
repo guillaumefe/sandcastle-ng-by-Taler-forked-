@@ -20,7 +20,12 @@ echo "Provisioning sandcastle"
 # General configuration.
 # Might eventually be moved to an external file.
 
-CURRENCY=KUDOS
+# Source any ovverrides from external file
+if [[ "${SANDCASTLE_OVERRIDE_NAME:-}" != "none" ]]; then
+	cat /overrides
+	source "/overrides" || true
+fi
+CURRENCY=${CURRENCY:="KUDOS"}
 EXCHANGE_IBAN=DE159593
 EXCHANGE_PLAIN_PAYTO=payto://iban/$EXCHANGE_IBAN
 EXCHANGE_FULL_PAYTO="payto://iban/$EXCHANGE_IBAN?receiver-name=Sandcastle+Echange+Inc"
@@ -35,7 +40,7 @@ MERCHANT_IBAN_TALER=DE1740597
 MERCHANT_IBAN_TOR=DE2648777
 MERCHANT_IBAN_SURVEY=DE0793060
 
-MYDOMAIN=demo.taler.net
+MYDOMAIN=${MYDOMAIN:="demo.taler.net"}
 LANDING_DOMAIN=$MYDOMAIN
 BANK_DOMAIN=bank.$MYDOMAIN
 EXCHANGE_DOMAIN=exchange.$MYDOMAIN

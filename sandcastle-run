@@ -36,6 +36,11 @@ fi
 # We need to be careful with SELinux when using volume mounts, relabel!
 
 SETUP_NAME=${SANDCASTLE_SETUP_NAME:-demo}
+if [[ ! -z "${SANDCASTLE_OVERRIDE_NAME:-}" ]]; then
+	OVERRIDES="-v $PWD/overrides/${SANDCASTLE_OVERRIDE_NAME}:/overrides:Z"
+else
+	OVERRIDES=""
+fi
 
 podman run \
   -d \
@@ -49,7 +54,9 @@ podman run \
   -p=$SANDCASTLE_PORT_BANK_SPA:$PORT_INTERNAL_BANK_SPA \
   --name taler-sandcastle \
   --systemd=always \
+  --env "SANDCASTLE_OVERRIDE_NAME=${SANDCASTLE_OVERRIDE_NAME:=none}" \
   -v talerdata:/talerdata:Z \
+  $OVERRIDES \
   -v $PWD/scripts:/scripts:Z \
   -v $PWD/scripts/$SETUP_NAME:/provision:Z \
   --entrypoint /sbin/init \
