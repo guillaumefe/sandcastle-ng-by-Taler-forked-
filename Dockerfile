@@ -65,7 +65,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get --no-install-recommends inst
 
 # FIXME: Try to use debian packages where possible and otherwise really use
 # a venv or per-user installation of the package.
-RUN pip3 install --break-system-packages requests click poetry uwsgi htmlark sphinx-book-theme
+RUN pip3 install --break-system-packages requests click poetry uwsgi htmlark sphinx-book-theme sphinx-markdown-builder
 
 # GNUnet
 FROM base-system AS gnunet
