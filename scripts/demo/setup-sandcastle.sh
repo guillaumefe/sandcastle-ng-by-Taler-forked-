@@ -225,9 +225,8 @@ sudo -i -u libeufin-bank libeufin-bank dbinit
 
 systemctl enable --now libeufin-bank.service
 
-# TODO: Create accounts for exchange and merchants
-
 taler-harness deployment wait-taler-service libeufin-bank https://$BANK_DOMAIN/config
+
 taler-harness deployment provision-bank-account https://$BANK_DOMAIN/ \
   --login exchange --exchange --public \
   --payto $EXCHANGE_PLAIN_PAYTO \
@@ -275,6 +274,9 @@ taler-harness deployment provision-bank-account https://$BANK_DOMAIN/ \
   --payto "payto://iban/$MERCHANT_IBAN_SURVEY" \
   --name "Tor Survey Merchant" \
   --password sandbox
+
+sudo -i -u libeufin-bank libeufin-bank edit-account admin --debit_threshold=$CURRENCY:1000000
+sudo -i -u libeufin-bank libeufin-bank passwd admin sandbox
 
 # Set up exchange
 
