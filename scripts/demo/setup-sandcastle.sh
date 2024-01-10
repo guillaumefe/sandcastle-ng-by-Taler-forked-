@@ -364,18 +364,8 @@ echo 'GRANT USAGE ON SCHEMA _v TO "taler-exchange-aggregator";' | sudo -i -u pos
 echo 'GRANT SELECT ON ALL TABLES IN SCHEMA _v TO "taler-exchange-aggregator";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
 
 
-# # The ToS generator is currently borked, we don't generated ToS until that's fixed.
-TOS_PATH=/usr/share/taler/terms
-if [[ ! -e "$TOS_PATH/stamp-generated" ]]; then
-  # ToS generator is picky about the path that it is being run from
-  cd $TOS_PATH
-  taler-terms-generator -i exchange-tos-v0 -a "Taler Systems SA" -C "Taler Systems SA" -p a4 -o $TOS_PATH -l en
-  taler-terms-generator -i exchange-pp-v0 -a "Taler Systems SA" -C "Taler Systems SA" -p a4 -o $TOS_PATH -l en
-  taler-terms-generator -i exchange-tos-v0 -a "Taler Systems SA" -C "Taler Systems SA" -p a4 -o $TOS_PATH
-  taler-terms-generator -i exchange-pp-v0 -a "Taler Systems SA" -C "Taler Systems SA" -p a4 -o $TOS_PATH
-  touch "$TOS_PATH/stamp-generated"
-  cd -
-fi
+taler-terms-generator -i /usr/share/taler/terms/exchange-tos-v0
+taler-terms-generator -i /usr/share/taler/terms/exchange-pp-v0
 
 systemctl enable --now taler-exchange.target
 
