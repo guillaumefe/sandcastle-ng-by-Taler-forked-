@@ -21,10 +21,10 @@ echo "Provisioning sandcastle"
 # Might eventually be moved to an external file.
 
 # Source any ovverrides from external file
-if [[ "${SANDCASTLE_OVERRIDE_NAME:-}" != "none" ]]; then
-	cat /overrides
-	source "/overrides" || true
+if [[ -e /overrides ]]; then
+  source /overrides
 fi
+
 CURRENCY=${CURRENCY:="KUDOS"}
 EXCHANGE_IBAN=DE159593
 EXCHANGE_PLAIN_PAYTO=payto://iban/$EXCHANGE_IBAN

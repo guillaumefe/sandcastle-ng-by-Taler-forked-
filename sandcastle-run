@@ -42,6 +42,12 @@ else
 	OVERRIDES=""
 fi
 
+# Beware: It is futile to pass environment variables to the container here,
+# as they will not be available in the systemd unit that provisions the
+# services in the container.
+# That's why we mount the right start-up script and override
+# to a well-known location.
+
 podman run \
   -d \
   -p=$SANDCASTLE_PORT_MERCHANT:$PORT_INTERNAL_MERCHANT \
@@ -54,7 +60,6 @@ podman run \
   -p=$SANDCASTLE_PORT_BANK_SPA:$PORT_INTERNAL_BANK_SPA \
   --name taler-sandcastle \
   --systemd=always \
-  --env "SANDCASTLE_OVERRIDE_NAME=${SANDCASTLE_OVERRIDE_NAME:=none}" \
   -v talerdata:/talerdata:Z \
   $OVERRIDES \
   -v $PWD/scripts:/scripts:Z \
