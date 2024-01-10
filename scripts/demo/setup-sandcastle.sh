@@ -337,8 +337,8 @@ fi
 echo "Initializing exchange database"
 taler-exchange-dbconfig
 
-taler-terms-generator -i /usr/share/taler/terms/exchange-tos-v0
-taler-terms-generator -i /usr/share/taler/terms/exchange-pp-v0
+taler-terms-generator -K -i /usr/share/taler/terms/exchange-tos-v0
+taler-terms-generator -K -i /usr/share/taler/terms/exchange-pp-v0
 
 systemctl enable --now taler-exchange.target
 
