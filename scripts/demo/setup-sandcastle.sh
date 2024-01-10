@@ -174,12 +174,7 @@ systemctl start postgresql.service
 # Set up bank
 
 
-# FIXME: user libeufin-dbconf instead of manual setup
-
 BANK_DB=libeufinbank
-# Use "|| true" to continue if these already exist.
-sudo -i -u postgres createuser -d libeufin-bank || true
-sudo -i -u postgres createdb -O libeufin-bank $BANK_DB || true
 
 cat <<EOF >/etc/libeufin/libeufin-bank.conf
 [libeufin-bankdb-postgres]
@@ -220,7 +215,7 @@ cat <<EOF >/etc/libeufin/settings.json
 }
 EOF
 
-sudo -i -u libeufin-bank libeufin-bank dbinit
+libeufin-dbconfig
 
 systemctl enable --now libeufin-bank.service
 
@@ -282,12 +277,6 @@ sudo -i -u libeufin-bank libeufin-bank passwd admin sandbox
 MASTER_PUBLIC_KEY=$(sudo -i -u taler-exchange-offline taler-exchange-offline -LDEBUG setup)
 
 EXCHANGE_DB=talerexchange
-# Use "|| true" to continue if these already exist.
-sudo -i -u postgres createuser -d taler-exchange-httpd || true
-sudo -i -u postgres createuser taler-exchange-wire || true
-sudo -i -u postgres createuser taler-exchange-closer || true
-sudo -i -u postgres createuser taler-exchange-aggregator || true
-sudo -i -u postgres createdb -O taler-exchange-httpd $EXCHANGE_DB || true
 
 # Generate /etc/taler/conf.d/setup.conf
 cat <<EOF > /etc/taler/conf.d/setup.conf
@@ -332,6 +321,7 @@ WIRE_GATEWAY_AUTH_METHOD = basic
 USERNAME = exchange
 PASSWORD = ${EXCHANGE_BANK_PASSWORD}
 EOF
+
 chmod 400 /etc/taler/secrets/exchange-accountcredentials-default.secret.conf
 chown taler-exchange-wire:taler-exchange-db /etc/taler/secrets/exchange-accountcredentials-default.secret.conf
 
@@ -345,23 +335,7 @@ if [[ ! -e /etc/taler/conf.d/$CURRENCY-coins.conf ]]; then
 fi
 
 echo "Initializing exchange database"
-sudo -u taler-exchange-httpd taler-exchange-dbinit -LDEBUG -c /etc/taler/taler.conf
-
-echo 'GRANT USAGE ON SCHEMA exchange TO "taler-exchange-wire";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA exchange TO "taler-exchange-wire";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT USAGE ON SCHEMA _v TO "taler-exchange-wire";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT SELECT ON ALL TABLES IN SCHEMA _v TO "taler-exchange-wire";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-
-echo 'GRANT USAGE ON SCHEMA exchange TO "taler-exchange-closer";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA exchange TO "taler-exchange-closer";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT USAGE ON SCHEMA _v TO "taler-exchange-closer";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT SELECT ON ALL TABLES IN SCHEMA _v TO "taler-exchange-closer";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-
-echo 'GRANT USAGE ON SCHEMA exchange TO "taler-exchange-aggregator";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA exchange TO "taler-exchange-aggregator";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT USAGE ON SCHEMA _v TO "taler-exchange-aggregator";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-echo 'GRANT SELECT ON ALL TABLES IN SCHEMA _v TO "taler-exchange-aggregator";' | sudo -i -u postgres psql -f - ${EXCHANGE_DB}
-
+taler-exchange-dbconfig
 
 taler-terms-generator -i /usr/share/taler/terms/exchange-tos-v0
 taler-terms-generator -i /usr/share/taler/terms/exchange-pp-v0
@@ -388,18 +362,16 @@ sudo -i -u taler-exchange-offline \
 # Set up merchant backend
 
 MERCHANT_DB=talermerchant
-# Use "|| true" to continue if these already exist.
-sudo -i -u postgres createuser -d taler-merchant-httpd || true
-sudo -i -u postgres createdb -O taler-merchant-httpd $MERCHANT_DB || true
 
 cat <<EOF >/etc/taler/secrets/merchant-db.secret.conf
 [merchantdb-postgres]
 CONFIG=postgres:///${MERCHANT_DB}
 EOF
+
 chmod 440 /etc/taler/secrets/merchant-db.secret.conf
 chown taler-merchant-httpd:root /etc/taler/secrets/merchant-db.secret.conf
 
-sudo -u taler-merchant-httpd taler-merchant-dbinit -c /etc/taler/taler.conf
+taler-merchant-dbconfig
 
 # The config shipped with the package can conflict with the
 # trusted sandcastle exchange if the currency is KUDOS.
