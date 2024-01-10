@@ -101,7 +101,6 @@ lift_dir /var/lib/taler var-lib-taler
 lift_dir /etc/taler etc-taler
 lift_dir /etc/libeufin etc-libeufin
 lift_dir /var/lib/postgresql var-lib-postgresql
-lift_dir /usr/share/taler/terms usr-share-taler-terms
 
 # Caddy configuration.
 # We use the caddy reverse proxy with automatic
