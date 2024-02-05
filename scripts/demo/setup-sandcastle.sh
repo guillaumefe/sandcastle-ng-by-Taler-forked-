@@ -173,14 +173,7 @@ systemctl start postgresql.service
 
 # Set up bank
 
-
-BANK_DB=libeufinbank
-
 cat <<EOF >/etc/libeufin/libeufin-bank.conf
-[libeufin-bankdb-postgres]
-# DB connection string
-CONFIG = postgresql:///$BANK_DB
-
 [libeufin-bank]
 CURRENCY = $CURRENCY
 DEFAULT_DEBT_LIMIT = $CURRENCY:500
@@ -215,6 +208,8 @@ cat <<EOF >/etc/libeufin/settings.json
 }
 EOF
 
+# Sets up the database for both libeufin-bank and libeufin-nexus.  We only need
+# the libeufin-bank DB though.
 libeufin-dbconfig
 
 systemctl enable --now libeufin-bank.service
