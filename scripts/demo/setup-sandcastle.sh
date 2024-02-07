@@ -38,7 +38,6 @@ MERCHANT_IBAN_BLOG=DE8292195
 MERCHANT_IBAN_GNUNET=DE9709960
 MERCHANT_IBAN_TALER=DE1740597
 MERCHANT_IBAN_TOR=DE2648777
-MERCHANT_IBAN_SURVEY=DE0793060
 
 MYDOMAIN=${MYDOMAIN:="demo.taler.net"}
 LANDING_DOMAIN=$MYDOMAIN
@@ -47,7 +46,6 @@ EXCHANGE_DOMAIN=exchange.$MYDOMAIN
 MERCHANT_DOMAIN=backend.$MYDOMAIN
 BLOG_DOMAIN=shop.$MYDOMAIN
 DONATIONS_DOMAIN=donations.$MYDOMAIN
-SURVEY_DOMAIN=survey.$MYDOMAIN
 
 # Ports of the services running inside the container.
 # Should be synchronized with the sandcastle-run script.
@@ -57,7 +55,6 @@ PORT_INTERNAL_LIBEUFIN_BANK=8080
 PORT_INTERNAL_LANDING=8501
 PORT_INTERNAL_BLOG=8502
 PORT_INTERNAL_DONATIONS=8503
-PORT_INTERNAL_SURVEY=8504
 PORT_INTERNAL_BANK_SPA=8505
 
 # Just make sure the services are stopped
@@ -67,7 +64,6 @@ systemctl stop postgresql.service
 systemctl stop taler-demo-landing.service
 systemctl stop taler-demo-blog.service
 systemctl stop taler-demo-donations.service
-systemctl stop taler-demo-survey.service
 systemctl stop libeufin-bank.service
 
 # We now make sure that some important locations are symlinked to
@@ -160,7 +156,6 @@ cat <<EOF >> /etc/hosts
 127.0.0.1 $MERCHANT_DOMAIN
 127.0.0.1 $BLOG_DOMAIN
 127.0.0.1 $DONATIONS_DOMAIN
-127.0.0.1 $SURVEY_DOMAIN
 # End of Taler Sandcastle Domains
 EOF
 
@@ -203,7 +198,6 @@ cat <<EOF >/etc/libeufin/settings.json
     "Bank": "https://$BANK_DOMAIN",
     "Essay Shop": "https://$BLOG_DOMAIN",
     "Donations": "https://$DONATIONS_DOMAIN",
-    "Survey": "https://$SURVEY_DOMAIN"
   }
 }
 EOF
@@ -256,12 +250,6 @@ taler-harness deployment provision-bank-account https://$BANK_DOMAIN/ \
   --login merchant-tor --public \
   --payto "payto://iban/$MERCHANT_IBAN_TOR" \
   --name "Tor Donations Merchant" \
-  --password sandbox
-
-taler-harness deployment provision-bank-account https://$BANK_DOMAIN/ \
-  --login merchant-survey --public \
-  --payto "payto://iban/$MERCHANT_IBAN_SURVEY" \
-  --name "Tor Survey Merchant" \
   --password sandbox
 
 sudo -i -u libeufin-bank libeufin-bank edit-account admin --debit_threshold=$CURRENCY:1000000
@@ -451,9 +439,6 @@ HTTP_PORT = $PORT_INTERNAL_BLOG
 [donations]
 SERVE = http
 HTTP_PORT = $PORT_INTERNAL_DONATIONS
-[survey]
-SERVE = http
-HTTP_PORT = $PORT_INTERNAL_SURVEY
 EOF
 
 # This really should not exist, the taler-merchant-frontends
@@ -464,13 +449,11 @@ TALER_ENV_URL_LANDING=https://$LANDING_DOMAIN/
 TALER_ENV_URL_BANK=https://$BANK_DOMAIN/
 TALER_ENV_URL_MERCHANT_BLOG=https://$BLOG_DOMAIN/
 TALER_ENV_URL_MERCHANT_DONATIONS=https://$DONATIONS_DOMAIN/
-TALER_ENV_URL_MERCHANT_SURVEY=https://$SURVEY_DOMAIN/
 EOF
 
 systemctl enable --now taler-demo-landing
 systemctl enable --now taler-demo-blog
 systemctl enable --now taler-demo-donations
-systemctl enable --now taler-demo-survey
 
 
 # FIXME: Maybe do some taler-wallet-cli test?
