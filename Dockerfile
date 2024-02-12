@@ -112,7 +112,9 @@ RUN TAG=$(cat /buildconfig/merchant.tag) && \
   git clone git://git.taler.net/merchant \
   --branch $TAG
 WORKDIR /build/merchant
-RUN ./bootstrap
+RUN ./bootstrap && \
+    ./configure --prefix=/usr \
+	        --disable-doc
 RUN dpkg-buildpackage -rfakeroot -b -uc -us
 WORKDIR /
 RUN mkdir -p /packages/merchant
