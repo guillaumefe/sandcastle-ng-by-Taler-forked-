@@ -11,4 +11,6 @@ RSYNC_DEST="rsync://${RSYNC_HOST}/${RSYNC_PATH}"
 
 rsync -vP \
       --port ${RSYNC_PORT} \
-      ${ARTIFACT_PATH} ${RSYNC_DEST}
+      ${ARTIFACT_PATH} ${RSYNC_DEST} || rm -f "${ARTIFACT_PATH}"
+
+rm -f "${ARTIFACT_PATH}"
