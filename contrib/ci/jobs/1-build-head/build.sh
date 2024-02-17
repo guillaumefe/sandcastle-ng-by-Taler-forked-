@@ -1,9 +1,7 @@
 #!/bin/bash
 set -exuo pipefail
 
-for i in buildconfig/*.tag ; do
-	echo "master" > "$i"
-done
+./contrib/ci/jobs/1-build-head/update-tags.sh
 
 ./sandcastle-build
 
