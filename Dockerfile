@@ -70,11 +70,12 @@ RUN pip3 install --break-system-packages requests click poetry uwsgi htmlark sph
 # GNUnet
 FROM base-system AS gnunet
 
-COPY buildconfig/gnunet.tag /buildconfig/
+COPY buildconfig/gnunet.* /buildconfig/
 WORKDIR /build
 RUN TAG=$(cat /buildconfig/gnunet.tag) && \
   git clone git://git.gnunet.org/gnunet \
-  --branch $TAG
+  --branch $TAG && \
+  cd gnunet && git checkout $(cat /buildconfig/gnunet.checkout)
 WORKDIR /build/gnunet
 RUN ./bootstrap
 RUN dpkg-buildpackage -rfakeroot -b -uc -us
@@ -88,11 +89,12 @@ WORKDIR /
 # Exchange
 FROM gnunet as exchange
 
-COPY buildconfig/exchange.tag /buildconfig/
+COPY buildconfig/exchange.* /buildconfig/
 WORKDIR /build
 RUN TAG=$(cat /buildconfig/exchange.tag) && \
   git clone git://git.taler.net/exchange \
-  --branch $TAG
+  --branch $TAG && \
+  cd exchange && git checkout $(cat /buildconfig/exchange.checkout)
 WORKDIR /build/exchange
 RUN ./bootstrap
 RUN dpkg-buildpackage -rfakeroot -b -uc -us
@@ -106,11 +108,12 @@ WORKDIR /
 # Merchant
 FROM exchange as merchant
 
-COPY buildconfig/merchant.tag /buildconfig/
+COPY buildconfig/merchant.* /buildconfig/
 WORKDIR /build
 RUN TAG=$(cat /buildconfig/merchant.tag) && \
   git clone git://git.taler.net/merchant \
-  --branch $TAG
+  --branch $TAG && \
+  cd merchant && git checkout $(cat /buildconfig/merchant.checkout)
 WORKDIR /build/merchant
 RUN ./bootstrap && \
     ./configure --prefix=/usr \
@@ -127,10 +130,11 @@ WORKDIR /
 FROM base-system as libeufin
 
 WORKDIR /build
-COPY buildconfig/libeufin.tag /buildconfig/
+COPY buildconfig/libeufin.* /buildconfig/
 RUN TAG=$(cat /buildconfig/libeufin.tag) && \
   git clone git://git.taler.net/libeufin \
-  --branch $TAG
+  --branch $TAG && \
+  cd libeufin && git checkout $(cat /buildconfig/libeufin.checkout)
 WORKDIR /build/libeufin
 RUN ./bootstrap
 RUN ./configure --prefix=/usr
@@ -145,10 +149,11 @@ RUN apt-get install --no-install-recommends -y /packages/libeufin/*.deb
 FROM base-system as merchant-demos
 
 WORKDIR /build
-COPY buildconfig/merchant-demos.tag /buildconfig/
+COPY buildconfig/merchant-demos.* /buildconfig/
 RUN TAG=$(cat /buildconfig/merchant-demos.tag) && \
   git clone git://git.taler.net/taler-merchant-demos \
-  --branch $TAG
+  --branch $TAG && \
+  cd taler-merchant-demos && git checkout $(cat /buildconfig/merchant-demos.checkout)
 WORKDIR /build/taler-merchant-demos
 RUN ./bootstrap
 RUN dpkg-buildpackage -rfakeroot -b -uc -us
@@ -161,10 +166,11 @@ RUN apt-get install --no-install-recommends -y /packages/merchant-demos/*.deb
 # wallet-core tools (taler-wallet-cli and taler-harness)
 FROM base-system as wallet
 WORKDIR /build
-COPY buildconfig/wallet.tag /buildconfig/
+COPY buildconfig/wallet.* /buildconfig/
 RUN TAG=$(cat /buildconfig/wallet.tag) && \
   git clone git://git.taler.net/wallet-core \
-  --branch $TAG
+  --branch $TAG && \
+  cd wallet-core && git checkout $(cat /buildconfig/wallet.checkout)
 RUN npm install -g pnpm@^8.7.0
 WORKDIR /build/wallet-core
 RUN ./bootstrap
@@ -188,11 +194,12 @@ RUN apt-get install --no-install-recommends -y /packages/wallet/*.deb
 
 # Sync
 FROM merchant as sync
-COPY buildconfig/sync.tag /buildconfig/
+COPY buildconfig/sync.* /buildconfig/
 WORKDIR /build
 RUN TAG=$(cat /buildconfig/sync.tag) && \
   git clone git://git.taler.net/sync \
-  --branch $TAG
+  --branch $TAG && \
+  cd sync && git checkout $(cat /buildconfig/sync.checkout)
 WORKDIR /build/sync
 RUN ./bootstrap
 RUN dpkg-buildpackage -rfakeroot -b -uc -us
