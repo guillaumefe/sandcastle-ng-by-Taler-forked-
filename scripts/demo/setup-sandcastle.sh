@@ -200,7 +200,7 @@ cat <<EOF >/etc/libeufin/settings.json
     "Landing": "https://$LANDING_DOMAIN/",
     "Bank": "https://$BANK_DOMAIN",
     "Essay Shop": "https://$BLOG_DOMAIN",
-    "Donations": "https://$DONATIONS_DOMAIN",
+    "Donations": "https://$DONATIONS_DOMAIN"
   }
 }
 EOF
