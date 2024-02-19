@@ -178,6 +178,9 @@ SUGGESTED_WITHDRAWAL_EXCHANGE = https://$EXCHANGE_DOMAIN/
 ALLOW_REGISTRATION = yes
 SERVE = tcp
 PORT = 8080
+# Bind address.
+# Option soon to be deprecated!
+ADDRESS = 0.0.0.0
 
 [currency-$CURRENCY]
 ENABLED = YES
