@@ -40,6 +40,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get --no-install-recommends inst
   python3-pip \
   python3-sphinx \
   python3-sphinx-rtd-theme \
+  python3-sphinx-multiversion \
   python3-venv \
   python3-dev \
   nodejs \
