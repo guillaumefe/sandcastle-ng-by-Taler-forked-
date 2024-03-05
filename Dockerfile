@@ -60,7 +60,8 @@ RUN apt-get update && apt-get -y upgrade && apt-get --no-install-recommends inst
   python3-flask-babel \
   uwsgi \
   python3-bs4 \
-  pybuild-plugin-pyproject
+  pybuild-plugin-pyproject \
+  pandoc
 
 # old: libzbar-dev
 
