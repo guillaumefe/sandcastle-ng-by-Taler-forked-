@@ -59,6 +59,7 @@ PORT_INTERNAL_BANK_SPA=8505
 
 # Just make sure the services are stopped
 systemctl stop taler-exchange.target
+systemctl stop taler-exchange-offline.timer
 systemctl stop taler-merchant-httpd.service
 systemctl stop postgresql.service
 systemctl stop taler-demo-landing.service
@@ -344,6 +345,8 @@ sudo -i -u taler-exchange-offline \
   wire-fee now iban "${CURRENCY}":0 "${CURRENCY}":0 \
   global-fee now "${CURRENCY}":0 "${CURRENCY}":0 "${CURRENCY}":0 1h 6a 0 \
   upload
+
+systemctl enable --now taler-exchange-offline.timer
 
 # Set up merchant backend
 
