@@ -1,5 +1,5 @@
 # sandcastle-ng-by-Taler-forked-
-Fork de https://git.taler.net/sandcastle-ng.git/tree/
+Forked from https://git.taler.net/sandcastle-ng.git/tree/
 
 # Installation and Configuration of GNU Taler via Sandcastle
 
