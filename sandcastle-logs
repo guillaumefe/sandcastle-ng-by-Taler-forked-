@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -exou
+
+exec podman exec -it taler-sandcastle journalctl -f

@@ -1,0 +1,28 @@
+# container-taler-sandcastle-test.service
+
+[Unit]
+Description=Podman container-taler-sandcastle-test.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=SANDCASTLE_OVERRIDE_NAME=test.taler.net
+Environment=SANDCASTLE_PORT_MERCHANT=127.0.0.1:16000
+Environment=SANDCASTLE_PORT_EXCHANGE=127.0.0.1:16001
+Environment=SANDCASTLE_PORT_BLOG=127.0.0.1:16002
+Environment=SANDCASTLE_PORT_DONATIONS=127.0.0.1:16003
+Environment=SANDCASTLE_PORT_LANDING=127.0.0.1:16005
+Environment=SANDCASTLE_PORT_LIBEUFIN_BANK=127.0.0.1:16007
+Environment=SANDCASTLE_PORT_BANK_SPA=127.0.0.1:16009
+Restart=on-failure
+TimeoutStopSec=70
+ExecStart=/home/taler-test/sandcastle-ng/sandcastle-run
+ExecStop=/usr/bin/podman stop \
+	taler-sandcastle
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=default.target
