@@ -38,6 +38,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get --no-install-recommends inst
   procps \
   python3-jinja2 \
   python3-pip \
+  python3-poetry-core \
   python3-sphinx \
   python3-sphinx-rtd-theme \
   python3-sphinx-multiversion \
