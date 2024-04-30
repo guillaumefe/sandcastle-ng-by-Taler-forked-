@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-exec podman exec -e=TERM -it taler-sandcastle /bin/bash

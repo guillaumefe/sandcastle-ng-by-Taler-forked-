@@ -1,6 +1,0 @@
-#!/bin/bash
-set -e
-
-for i in buildconfig/*.tag ; do
-	echo "$i is: $(cat $i)"
-done
